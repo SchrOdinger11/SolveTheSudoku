@@ -1,0 +1,106 @@
+<html>
+<head>
+  <title></title>
+  <script type="text/javascript" src="solver.js"></script>
+  <script type="text/javascript" src="analytics.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  
+    
+  <div id="container">
+    
+
+    <h1 class = "padd">Let's Solve</h1>
+
+    <table id="sudoku">
+      
+      
+      <colgroup><col><col><col>
+      <colgroup><col><col><col>
+      <colgroup><col><col><col>
+      <tbody>
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>     
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>
+      <tbody>
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>     
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>
+      <tbody>
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>     
+       <tr> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td> <td contenteditable="true"></td>
+    </table>
+    <div>
+      <button id="solve-button">Solve!</button>
+    </div>
+    <div>
+      <button id="clear-button">Clear board</button>
+    </div>
+  </div>
+</body>
+
+<script type="text/javascript">
+  document.getElementById("sudoku").addEventListener("keyup", function(event) {
+    if(event.target && event.target.nodeName == "TD") {
+    
+      var elementoftd = event.target;
+      var validity = /[1-9]/;
+      if (elementoftd.innerText.length > 0 && validity.test(elementoftd.innerText[0])) {
+        elementoftd.innerText = elementoftd.innerText[0];
+      } else {
+        elementoftd.innerText = "";
+      }
+    }
+  });
+
+  document.getElementById("solve-button").addEventListener("click", function(event) {
+    var board_to_String = boardToString();
+    var soln = Solver.solve(board_to_String );
+    if (soln) {
+      stringToBoard(soln);
+    } else {
+      alert("Invalid board!");
+    }
+  })
+
+  document.getElementById("clear-button").addEventListener("click", clearBoard);
+
+  function clearBoard() {
+    var td_element = document.getElementsByTagName("td");
+    for (var i = 0; i < td_element.length; i++) {
+        td_element[i].innerText = "";
+    }
+  }
+
+//   Convert board elements to a string so that they can be easily modified
+  function boardToString() {
+    var str = "";
+    var validity = /[1-9]/;
+    var td_element = document.getElementsByTagName("td");
+    for (var i = 0; i < td_element.length; i++) {
+        //innerText of 0 ensures that we have number which is strictly between [1-9]
+      if (validity.test(td_element[i].innerText[0])) {
+        str += td_element[i].innerText;
+      } else {
+        str += "-";
+      }
+    }
+    return str;
+  }
+
+  function stringToBoard(str) {
+    var currentCell;
+    var validity = /[1-9]/;
+    var cells = str.split("");
+    var td_element = document.getElementsByTagName("td");
+    for (var i = 0; i < td_element.length; i++) {
+      currentCell = cells.shift();
+      if (validity.test(currentCell)) {
+        td_element[i].innerText = currentCell;
+      }
+    }
+  }
+</script>
+</html>
